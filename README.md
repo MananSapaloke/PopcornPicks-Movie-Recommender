@@ -94,3 +94,6 @@ To run this project on your own machine, follow these steps:
     ```bash
     streamlit run app.py
     ```
+
+Upcoming features
+Websites where to watch each movie with working links
