@@ -65,7 +65,7 @@ div[data-testid="stButton"] > button:hover { transform: scale(1.05); }
 .movie-title { font-size: 1.1rem; font-weight: bold; color: #ffffff; }
 .movie-details, .movie-overview { font-size: 0.85rem; color: #b0b8c9; margin-top: 0.5rem; }
 .movie-genres { font-size: 0.8rem; font-style: italic; color: #8c9eff; margin-top: 0.5rem; }
-.verdict-box { padding-top: 0.75rem; font-size: 0.9rem; font-weight: bold; color: #a6ffaa; }
+/* The .verdict-box style was here and has been removed */
 </style>
 """, unsafe_allow_html=True)
 
@@ -87,9 +87,7 @@ def get_poster_url(path):
     if pd.isna(path) or path == '': return "https://via.placeholder.com/500x750.png?text=No+Image"
     return f"https://image.tmdb.org/t/p/w500/{path}"
 
-def generate_verdict(movie):
-    if movie['rating'] >= 7.5: return "A must-watch! Critics and audiences love it."
-    else: return "A solid choice for fans of the genre."
+# The generate_verdict function was here and has been removed
 
 def recommend(movie_title):
     idx = movies[movies['title'] == movie_title].index[0]
@@ -110,7 +108,7 @@ def display_movie_card(movie, col):
                 <p class="movie-details">⭐ {movie['rating']:.1f}/10 | 💰 ${movie['revenue']:,}</p>
                 <p class="movie-details"><b>Cast:</b> {', '.join(movie['cast'][:3])}</p>
             </div>
-            <div class="verdict-box">{generate_verdict(movie)}</div>
+            <!-- The verdict-box div was here and has been removed -->
         </div>
         """, unsafe_allow_html=True)
 
