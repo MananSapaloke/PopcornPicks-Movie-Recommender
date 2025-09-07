@@ -56,6 +56,17 @@ Thumbs.db
 *.pkl
 *.pickle
 
+# Large model files that exceed GitHub limits
+tmdb_enhanced_movies_df.pkl
+tmdb_enhanced_similarity.pkl
+tmdb_movies_df.pkl
+tmdb_similarity.pkl
+tmdb_tfidf_vectorizer.pkl
+processed_tmdb_enhanced_dataset.csv
+processed_tmdb_dataset.csv
+tmdb_enhanced_dataset.csv
+tmdb_full_dataset.csv
+
 # API Keys (if any)
 .env
 config.py
