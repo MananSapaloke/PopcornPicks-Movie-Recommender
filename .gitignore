@@ -51,12 +51,12 @@ Thumbs.db
 # Streamlit
 .streamlit/
 
-# Data files (large datasets)
+# Data files (large datasets) - exclude from git but include in deployment
 *.csv
 *.pkl
 *.pickle
 
-# Large model files that exceed GitHub limits
+# Keep these files for deployment but exclude from git due to size
 tmdb_enhanced_movies_df.pkl
 tmdb_enhanced_similarity.pkl
 tmdb_movies_df.pkl
