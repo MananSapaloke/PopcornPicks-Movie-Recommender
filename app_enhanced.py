@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import ast
+import os
 from rapidfuzz import fuzz, process
 import numpy as np
 from typing import List, Dict, Tuple
@@ -264,9 +265,20 @@ div[data-testid="stButton"] > button:hover {
 # --- Enhanced Data Loading with Error Handling ---
 @st.cache_resource
 def load_data():
-    """Load movie data without loading huge similarity matrices (prevents MemoryError)."""
+    """Load movie data with automatic data generation if files are missing."""
+    # Try to load enhanced dataset first
     try:
-        movies_df = pickle.load(open('tmdb_movies_df.pkl', 'rb'))
+        if os.path.exists('processed_tmdb_enhanced_dataset.csv'):
+            movies_df = pd.read_csv('processed_tmdb_enhanced_dataset.csv')
+            st.success("✅ Loaded enhanced dataset with 20,000+ movies!")
+        elif os.path.exists('tmdb_movies_df.pkl'):
+            movies_df = pickle.load(open('tmdb_movies_df.pkl', 'rb'))
+            st.info("📊 Loaded basic dataset")
+        else:
+            # No data files found - generate them automatically
+            st.warning("🔄 No data files found. Generating dataset automatically...")
+            return generate_data_automatically()
+        
         # Process list columns
         for col in ['genres', 'cast', 'streaming_on']:
             if col in movies_df.columns:
@@ -274,12 +286,72 @@ def load_data():
                     lambda x: ast.literal_eval(x) if isinstance(x, str) else x
                 )
         return movies_df
-    except FileNotFoundError as e:
-        st.error(f"Data files not found: {e}")
-        st.info("Please run the data pipeline first: `python data_processing_enhanced.py`")
-        return None
+        
     except Exception as e:
         st.error(f"Error loading data: {e}")
+        st.info("🔄 Attempting to generate data automatically...")
+        return generate_data_automatically()
+
+def generate_data_automatically():
+    """Automatically generate data files if they don't exist."""
+    import subprocess
+    import sys
+    
+    try:
+        # Show progress
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        
+        # Step 1: Fetch data
+        status_text.text("📡 Fetching movie data from TMDB...")
+        progress_bar.progress(25)
+        
+        result = subprocess.run([sys.executable, 'fetch_tmdb_data_enhanced.py'], 
+                              capture_output=True, text=True, timeout=300)
+        
+        if result.returncode != 0:
+            st.error(f"Data fetching failed: {result.stderr}")
+            return None
+            
+        # Step 2: Process data
+        status_text.text("🔧 Processing data and building ML model...")
+        progress_bar.progress(75)
+        
+        result = subprocess.run([sys.executable, 'data_processing_enhanced.py'], 
+                              capture_output=True, text=True, timeout=300)
+        
+        if result.returncode != 0:
+            st.error(f"Data processing failed: {result.stderr}")
+            return None
+            
+        # Step 3: Load the generated data
+        status_text.text("✅ Loading generated dataset...")
+        progress_bar.progress(100)
+        
+        if os.path.exists('processed_tmdb_enhanced_dataset.csv'):
+            movies_df = pd.read_csv('processed_tmdb_enhanced_dataset.csv')
+            # Process list columns
+            for col in ['genres', 'cast', 'streaming_on']:
+                if col in movies_df.columns:
+                    movies_df[col] = movies_df[col].apply(
+                        lambda x: ast.literal_eval(x) if isinstance(x, str) else x
+                    )
+            
+            status_text.text("🎉 Dataset generated successfully!")
+            time.sleep(2)
+            progress_bar.empty()
+            status_text.empty()
+            st.success("✅ Ready to go! Your movie recommender is now loaded with 20,000+ movies!")
+            return movies_df
+        else:
+            st.error("❌ Data generation failed - files not created")
+            return None
+            
+    except subprocess.TimeoutExpired:
+        st.error("⏰ Data generation timed out. Please try again.")
+        return None
+    except Exception as e:
+        st.error(f"❌ Error during data generation: {e}")
         return None
 
 @st.cache_resource
