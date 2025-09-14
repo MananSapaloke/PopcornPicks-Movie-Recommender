@@ -1,0 +1,74 @@
+/* Global style */
+body {
+    background-color: #141414;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #141414;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    border-bottom: 1px solid #333;
+}
+
+.nav-logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e50914;
+    text-decoration: none;
+}
+
+.nav-right a {
+    margin-left: 20px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.nav-right a:hover {
+    color: #e50914;
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(to right, #141414, #1c1c1c);
+    border-radius: 12px;
+    margin: 30px 0;
+}
+
+.hero h1 {
+    font-size: 48px;
+    color: #e50914;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 20px;
+    color: #ccc;
+}
+
+/* CTA button */
+.cta {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.cta-btn {
+    background-color: #e50914;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.cta-btn:hover {
+    background-color: #f40612;
+}
